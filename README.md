@@ -22,12 +22,12 @@ create table guests (
   email text unique,
   full_name text,
   dietary_restrictions text,
-  company_name text,
+  company_name text
 );
 
 create table events (
-    id uuid not null primary key,
-    created_by references public.guests.id not null,
+    id uuid not null primary key default gen_random_uuid(),
+    created_by uuid references public.guests not null,
     created_at timestamp with time zone,
     event_name text,
     description text,
@@ -36,16 +36,16 @@ create table events (
     og_image text,
     event_url text,
     start_timestampz timestamp with time zone,
-    end_timestampz timestamp with time zone,
+    end_timestampz timestamp with time zone
 );
 
 create table rsvps (
-    id uuid not null primary key,
+    id uuid not null primary key default gen_random_uuid(),
     created_at timestamp with time zone,
-    event_id uuid references public.events.id not null,
-    email text references public.guests.email,
+    event_id uuid references public.events not null,
+    email text references public.guests (email),
     comments text,
-    discussion_topics text,
+    discussion_topics text
 );
 
 -- This trigger automatically creates a guest when a new user signs up via Supabase Auth.
